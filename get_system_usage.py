@@ -5,6 +5,7 @@ def get_system_usage():
     cpu = psutil.cpu_percent(interval=1)
     memory = psutil.virtual_memory()
 
+    # print(f"記憶體資訊: {memory}")
     print(f"CPU 使用率: {cpu}%")
     print(f"記憶體總量: {memory.total / (1024**3):.2f} GB")
     print(f"記憶體使用率: {memory.percent}%")
