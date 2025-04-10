@@ -64,6 +64,14 @@ def find_keyword_in_files(repo_paths, keyword, file_extensions=None, file_keywor
                         if image not in images:
                           images.append(image)
                           print(f"{GREEN}找到 docker image: {image}{RESET}")
+                      elif "- docker push " in line:
+                        # 取得 docker image
+                        image = line.split("- docker push ")[1].strip()
+                        if image not in images:
+                          images.append(image)
+                          print(f"{GREEN}找到 docker image: {image}{RESET}")
+                else:
+                  print(f"檔案: {file_path} 不包含關鍵字 '{keyword}'")
               else:
                 print(f"跳過二進位檔案: {file_path}")
           except UnicodeDecodeError as e:
@@ -90,4 +98,6 @@ if __name__ == "__main__":
   # 搜尋 YAML 檔案
   find_keyword_in_files(repo_paths, keyword, file_extensions=[".yaml", ".yml"])
 
-  print(f"{GREEN}找到的 docker image: {images}{RESET}")
+  print(f"{GREEN}找到的 docker image:{RESET}")
+  for image in images:
+    print(f"{GREEN}{image}{RESET}")
