@@ -1,13 +1,11 @@
 import os
 
+# 定義顏色常數
 RED = "\033[91m"  # ANSI 顏色碼：紅色
 YELLOW = "\033[93m"  # ANSI 顏色碼：黃色
 GREEN = "\033[92m"  # ANSI 顏色碼：綠色
 BULE = "\033[94m"  # ANSI 顏色碼：藍色
 RESET = "\033[0m"  # ANSI 顏色碼：重置顏色
-
-# images 空陣列
-images = []
 
 def is_binary_file(file_path):
   """
@@ -52,24 +50,12 @@ def find_keyword_in_files(repo_paths, keyword, file_extensions=None, file_keywor
                     if keyword in line:
                       # line 取得 docker image
                       print(f"{YELLOW}找到關鍵字 '{keyword}' 在行: {line}{RESET}")
-                      if "FROM" in line:
-                        # 取得 docker image
-                        image = line.split("FROM")[1].strip()
-                        if image not in images:
-                          images.append(image)
-                          print(f"{GREEN}找到 docker image: {image}{RESET}")
-                      elif "image:" in line:
-                        # 取得 docker image
-                        image = line.split("image:")[1].strip()
-                        if image not in images:
-                          images.append(image)
-                          print(f"{GREEN}找到 docker image: {image}{RESET}")
-                      elif "- docker push " in line:
-                        # 取得 docker image
-                        image = line.split("- docker push ")[1].strip()
-                        if image not in images:
-                          images.append(image)
-                          print(f"{GREEN}找到 docker image: {image}{RESET}")
+                      # keyword -> new_keyword
+                      new_line = line.replace(keyword, new_keyword)
+                      print(f"{GREEN}替換行: {new_line}{RESET}")
+                      # 將替換後的行寫回檔案
+                      with open(file_path, 'w', encoding='utf-8') as f_write:
+                        f_write.write(content.replace(line, new_line))
                 else:
                   print(f"檔案: {file_path} 不包含關鍵字 '{keyword}'")
               else:
@@ -78,6 +64,7 @@ def find_keyword_in_files(repo_paths, keyword, file_extensions=None, file_keywor
             print(f"無法讀取檔案: {file_path}, 原因: {e}")
 
 if __name__ == "__main__":
+
   # 使用者可修改以下路徑與關鍵字
   repo_paths = [
     "/Users/bing-wei/Documents/swissknife/SRE/pid-cluster-yaml/bbin/outside",
@@ -92,12 +79,11 @@ if __name__ == "__main__":
   # 替換為你要搜尋的關鍵字
   keyword = "gcr.io/rd6-project"
 
+  # 欲替換的關鍵字
+  new_keyword = "asia-east1-docker.pkg.dev/gcp-20210526-001/rd6-project"
+
   # 搜尋 Dockerfile 和相關檔案
   find_keyword_in_files(repo_paths, keyword, file_keywords=["Dockerfile", "docker"])
 
   # 搜尋 YAML 檔案
   find_keyword_in_files(repo_paths, keyword, file_extensions=[".yaml", ".yml"])
-
-  print(f"{GREEN}找到的 docker image:{RESET}")
-  for image in images:
-    print(f"{GREEN}{image}{RESET}")
