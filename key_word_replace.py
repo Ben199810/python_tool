@@ -67,20 +67,15 @@ if __name__ == "__main__":
 
   # 使用者可修改以下路徑與關鍵字
   repo_paths = [
-    "/Users/bing-wei/Documents/swissknife/SRE/pid-cluster-yaml/bbin/outside",
-    "/Users/bing-wei/Documents/swissknife/SRE/pid-cluster-yaml/bbgp/outside",
-    "/Users/bing-wei/Documents/swissknife/SRE/images-build/PI"
-    "/Users/bing-wei/Documents/swissknife/SRE/images-build/base",
-    "/Users/bing-wei/Documents/swissknife/SRE/images-build/cicd",
-    "/Users/bing-wei/Documents/swissknife/SRE/images-build/proxy-server",
-    "/Users/bing-wei/Documents/swissknife/SRE/images-build/redis_auto_restart",
-    "/Users/bing-wei/Documents/swissknife/SRE/images-build/runner",
+    "/path/to/your/repo1",
+    "/path/to/your/repo2",
+    # 可以添加更多 repo 路徑
   ]
   # 替換為你要搜尋的關鍵字
-  keyword = "gcr.io/rd6-project"
+  keyword = "keyword"
 
   # 欲替換的關鍵字
-  new_keyword = "asia-east1-docker.pkg.dev/gcp-20210526-001/rd6-project"
+  new_keyword = "new_keyword"
 
   # 搜尋 Dockerfile 和相關檔案
   find_keyword_in_files(repo_paths, keyword, file_keywords=["Dockerfile", "docker"])
