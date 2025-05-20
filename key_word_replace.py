@@ -8,19 +8,19 @@ BULE = "\033[94m"  # ANSI 顏色碼：藍色
 RESET = "\033[0m"  # ANSI 顏色碼：重置顏色
 
 def is_binary_file(file_path):
-  """
-  檢查檔案是否為二進位檔案
-  :param file_path: 檔案路徑
-  :return: 如果是二進位檔案則回傳 True，否則 False
-  """
-  try:
-    with open(file_path, 'rb') as f:
-      chunk = f.read(1024)
-      if b'\0' in chunk:
-        return True
-  except Exception as e:
-    print(f"無法檢查檔案是否為二進位檔案: {file_path}, 原因: {e}")
-  return False
+    """
+    檢查檔案是否為二進位檔案
+    :param file_path: 檔案路徑
+    :return: 如果是二進位檔案則回傳 True，否則 False
+    """
+    try:
+        with open(file_path, 'rb') as f:
+          chunk = f.read(1024)
+          if b'\0' in chunk:
+            return True
+    except Exception as e:
+        print(f"無法檢查檔案是否為二進位檔案: {file_path}, 原因: {e}")
+    return False
 
 def find_keyword_in_files(repo_paths, keyword, file_extensions=None, file_keywords=None):
   """
@@ -34,8 +34,10 @@ def find_keyword_in_files(repo_paths, keyword, file_extensions=None, file_keywor
     print(f"正在檢查 repo: {repo_path}")
     for root, dirs, files in os.walk(repo_path):
       for file in files:
-        # 檢查檔案是否符合條件
+        # 檢查檔案副檔名或檔案名稱符合條件
+        # 這裡的條件是：檔案副檔名在 file_extensions 列表中，或檔案名稱包含 file_keywords 中的任一關鍵字
         if (file_extensions and any(file.endswith(ext) for ext in file_extensions)) or (file_keywords and any(keyword in file for keyword in file_keywords)):
+          # 檔案路徑
           file_path = os.path.join(root, file)
           # 讀取檔案檢查關鍵字
           try:
@@ -64,21 +66,22 @@ def find_keyword_in_files(repo_paths, keyword, file_extensions=None, file_keywor
             print(f"無法讀取檔案: {file_path}, 原因: {e}")
 
 if __name__ == "__main__":
+    # 使用者可修改以下路徑與關鍵字
+    repo_paths = [
+      "/path/to/your/repo1",
+      "/path/to/your/repo2",
+      # 可以添加更多 repo 路徑
+    ]
+    # 欲搜尋的關鍵字
+    keyword = "keyword"
+    # 欲替換的關鍵字
+    new_keyword = "new_keyword"
 
-  # 使用者可修改以下路徑與關鍵字
-  repo_paths = [
-    "/path/to/your/repo1",
-    "/path/to/your/repo2",
-    # 可以添加更多 repo 路徑
-  ]
-  # 替換為你要搜尋的關鍵字
-  keyword = "keyword"
+    # 搜尋 Dockerfile 和相關檔案
+    # find_keyword_in_files(repo_paths, keyword, file_keywords=["Dockerfile", "docker"])
 
-  # 欲替換的關鍵字
-  new_keyword = "new_keyword"
+    # 搜尋 YAML 檔案
+    # find_keyword_in_files(repo_paths, keyword, file_extensions=[".yaml", ".yml"])
 
-  # 搜尋 Dockerfile 和相關檔案
-  find_keyword_in_files(repo_paths, keyword, file_keywords=["Dockerfile", "docker"])
-
-  # 搜尋 YAML 檔案
-  find_keyword_in_files(repo_paths, keyword, file_extensions=[".yaml", ".yml"])
+    # 搜尋 hcl 檔案
+    # find_keyword_in_files(repo_paths, keyword, file_extensions=[".hcl"])
